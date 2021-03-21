@@ -1,0 +1,58 @@
+package com.afklm.bre.factmodel.afmobile;
+
+import java.util.Arrays;
+
+public class Check3 {
+
+    public static void main(String[] args) {
+        Check3 check3 = new Check3();
+        int[] ItemWeights = new int[]{1, 2, 3, 4, 5};
+        int[] ItemValues = new int[]{1, 200, 4, 5, 7};
+        int[][] memory = new int[8][6];
+        check3.fill(memory, -1);
+        int maxWeight = check3.knipSack(ItemValues, ItemWeights, 7, 5, memory);
+        System.out.println(Arrays.deepToString(memory));
+        System.out.println(maxWeight);
+    }
+
+    public int knipSack(int[] values, int[] weights, int w, int numberOfItems, int[][] memory) {
+        // Memory
+        if (memory[w][numberOfItems] != -1) {
+            return memory[w][numberOfItems];
+        }
+        
+        // Update Memory
+        if (w == 0 || numberOfItems == 0) {
+            memory[w][numberOfItems] = 0;
+        } else if (weights[numberOfItems - 1] <= w) {
+            int totalValueWithCurrentItem = values[numberOfItems - 1] + knipSack(values, weights, w - weights[numberOfItems - 1], numberOfItems - 1, memory);
+            int totalValueWithOutCurrentItem = knipSack(values, weights, w, numberOfItems - 1, memory);
+            memory[w][numberOfItems] = Math.max(totalValueWithCurrentItem, totalValueWithOutCurrentItem);
+        } else {
+            memory[w][numberOfItems] = knipSack(values, weights, w, numberOfItems - 1, memory);
+        }
+        return memory[w][numberOfItems];
+    }
+
+    private void fill(int[][] memory, int initialValue) {
+        for (int i = 0; i < memory.length; i++) {
+            for (int j = 0; j < memory[0].length; j++) {
+                memory[i][j] = initialValue;
+            }
+        }
+    }
+}
+
+//////////////// OUTPUT //////////////
+
+[[0, 0, 0, -1, -1, -1], 
+[0, 1, -1, -1, -1, -1], 
+[0, 1, 200, 200, 200, -1], 
+[0, 1, 201, 201, -1, -1], 
+[0, 1, 201, -1, -1, -1], 
+[0, 1, -1, -1, -1, -1], 
+[0, -1, -1, -1, -1, -1], 
+[0, 1, 201, 205, 206, 207]]
+
+Answer : 207
+
