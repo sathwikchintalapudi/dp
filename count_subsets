@@ -1,0 +1,49 @@
+package com.klm.checkout;
+
+public class Check1 {
+
+    public static void main(String[] args) {
+
+        Check1 check1 = new Check1();
+        int total = check1.getNumberOfSubsets(new int[]{1, 2, 3, 5, 4}, 11);
+        System.out.println(total);
+    }
+
+    private int getNumberOfSubsets(int[] input, int sum) {
+        int numberOfElements = input.length;
+        int[][] reference = new int[numberOfElements + 1][sum + 1];
+        populateBaseCase(reference);
+
+        for (int element = 1; element <= numberOfElements; element++) {
+            for (int weight = 1; weight <= sum; weight++) {
+                if (input[element - 1] > weight) {
+                    reference[element][weight] = reference[element - 1][weight];
+                }
+                else {
+                    int numberOdSubsetsWithOutCurrentElement = reference[element - 1][weight];
+                    int numberOdSubsetsWithCurrentElement = reference[element - 1][weight - input[element - 1]];
+                    reference[element][weight] = numberOdSubsetsWithOutCurrentElement + numberOdSubsetsWithCurrentElement;
+                }
+            }
+        }
+        return reference[numberOfElements][sum];
+    }
+
+    private void populateBaseCase(int[][] reference) {
+
+        int numberOfInputElements = reference.length; //7
+        int weights = reference[0].length; // 12
+        reference[0][0] = 1;
+
+        for (int i = 1; i < numberOfInputElements; i++) { //
+            reference[i][0] = 1;
+        }
+
+        for (int j = 1; j < weights; j++) {
+            reference[0][j] = 0;
+        }
+
+    }
+
+
+}
